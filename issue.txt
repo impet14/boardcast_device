@@ -1,0 +1,21 @@
+2025-07-02T05:33:54Z [INFO] Published to /boardcast/station-00005
+2025-07-02T05:33:59Z [INFO] Published to /boardcast/station-00005
+2025-07-02T05:34:04Z [INFO] Published to /boardcast/station-00005
+2025-07-02T05:34:10Z [WARNING] MQTT disconnected, will reconnect
+Traceback (most recent call last):
+  File "/home/rpi/boardcast_device/boardcast_device.py", line 132, in <module>
+    main()
+  File "/home/rpi/boardcast_device/boardcast_device.py", line 117, in main
+    "gps": read_gps()
+           ^^^^^^^^^^
+  File "/home/rpi/boardcast_device/boardcast_device.py", line 83, in read_gps
+    "latitude":  msg.latitude,
+                 ^^^^^^^^^^^^
+  File "/home/rpi/env-bc/lib/python3.11/site-packages/pynmea2/nmea_utils.py", line 69, in latitude
+    sd = dm_to_sd(self.lat)
+         ^^^^^^^^^^^^^^^^^^
+  File "/home/rpi/env-bc/lib/python3.11/site-packages/pynmea2/nmea_utils.py", line 56, in dm_to_sd
+    raise ValueError("Geographic coordinate value '{}' is not valid DDDMM.MMM".format(dm))
+ValueError: Geographic coordinate value '1351.770B' is not valid DDDMM.MMM
+rpi@raspberrypi:~/boardcast_device $ 
+

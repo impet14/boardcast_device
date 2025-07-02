@@ -1,0 +1,2 @@
+[console_scripts]
+read_bme280 = bme280.bme280:main
