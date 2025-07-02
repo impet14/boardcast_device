@@ -6914,3 +6914,76 @@ nohup: ignoring input
 2025-07-02T19:34:51Z [INFO] Published to /boardcast/station-00005
 2025-07-02T19:34:56Z [INFO] Published to /boardcast/station-00005
 2025-07-02T19:35:01Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:35:06Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:35:11Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:35:16Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:35:21Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:35:26Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:35:31Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:35:36Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:35:41Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:35:46Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:35:51Z [WARNING] Invalid GPS data: $GPRMC,070531.00,A,1351.78349,N,10034.81902,E,0.179,M,-27.8,M,,0000*4E (('checksum does not match: 4E != 03', ['070531.00', 'A', '1351.78349', 'N', '10034.81902', 'E', '0.179', 'M', '-27.8', 'M', '', '0000']))
+2025-07-02T19:35:51Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:35:56Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:36:02Z [WARNING] Invalid GPS data: $GPGGA,070541.00,1351.78201,N,10034.81978,E,2,10,02,278,24,11,09,124,11,12,06,170,28*7F (('checksum does not match: 7F != 4A', ['070541.00', '1351.78201', 'N', '10034.81978', 'E', '2', '10', '02', '278', '24', '11', '09', '124', '11', '12', '06', '170', '28']))
+2025-07-02T19:36:02Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:36:07Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:36:12Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:36:17Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:36:22Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:36:27Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:36:32Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:36:37Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:36:42Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:36:47Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:36:52Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:36:57Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:37:02Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:37:07Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:37:12Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:37:17Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:37:22Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:37:27Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:37:32Z [WARNING] Invalid GPS data: $GPRMC,070747.00,A,1351.77865,N,10034.82199,E,0.239,,0205,M,-27.8,M,,0000*42 (('checksum does not match: 42 != 03', ['070747.00', 'A', '1351.77865', 'N', '10034.82199', 'E', '0.239', '', '0205', 'M', '-27.8', 'M', '', '0000']))
+2025-07-02T19:37:32Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:37:37Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:37:42Z [WARNING] Invalid GPS data: $GPGGA,070802.00,1351.77274,N,10034.82389,E,2,10,0.92,37.1,M,-27.8,9,124,19,12,06,169,27*72 (('checksum does not match: 72 != 31', ['070802.00', '1351.77274', 'N', '10034.82389', 'E', '2', '10', '0.92', '37.1', 'M', '-27.8', '9', '124', '19', '12', '06', '169', '27']))
+2025-07-02T19:37:42Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:37:47Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:37:52Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:37:57Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:38:02Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:38:07Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:38:13Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:38:18Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:38:23Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:38:28Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:38:33Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:38:38Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:38:43Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:38:48Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:38:53Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:38:58Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:39:03Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:39:08Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:39:13Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:39:18Z [WARNING] Invalid GPS data: $GPRMC,0701002.00,1351.78255,N,10034.81672,E,2,10,1.03,27.1,M,-27.8,M,,0000*4B (('checksum does not match: 4B != 66', ['0701002.00', '1351.78255', 'N', '10034.81672', 'E', '2', '10', '1.03', '27.1', 'M', '-27.8', 'M', '', '0000']))
+2025-07-02T19:39:18Z [WARNING] Invalid GPS data: $GPRMC,071003.00,A,1351.78266,N,10034.81674,E,0.853,,020,13,05,12,11,32,29,20,25,24,15,,,1.38,0.87,1.07*08 (('checksum does not match: 08 != 1D', ['071003.00', 'A', '1351.78266', 'N', '10034.81674', 'E', '0.853', '', '020', '13', '05', '12', '11', '32', '29', '20', '25', '24', '15', '', '', '1.38', '0.87', '1.07']))
+2025-07-02T19:39:18Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:39:23Z [WARNING] Invalid GPS data: $GPGGA,071013.00,1351.78484,N,105,20,052,24,10,03,279,21,11,08,125,19,12,06,168,26*78 (('checksum does not match: 78 != 33', ['071013.00', '1351.78484', 'N', '105', '20', '052', '24', '10', '03', '279', '21', '11', '08', '125', '19', '12', '06', '168', '26']))
+2025-07-02T19:39:23Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:39:28Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:39:33Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:39:38Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:39:43Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:39:48Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:39:53Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:39:58Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:40:03Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:40:08Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:40:13Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:40:18Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:40:23Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:40:28Z [INFO] Published to /boardcast/station-00005
+2025-07-02T19:40:33Z [INFO] Published to /boardcast/station-00005
