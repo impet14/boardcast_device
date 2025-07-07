@@ -1,6 +1,8 @@
 [Unit]
-Description=Boardcast Device Agent
+Description=Boardcast IoT Device Service
 After=network.target
+StartLimitIntervalSec=300
+StartLimitBurst=5
 
 [Service]
 Type=simple
@@ -8,8 +10,11 @@ User=rpi
 WorkingDirectory=/home/rpi/boardcast_device
 EnvironmentFile=/home/rpi/boardcast_device/.env
 ExecStart=/home/rpi/boardcast_device/venv/bin/python3 boardcast_device.py
-Restart=always
-RestartSec=5
+Restart=on-failure
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=boardcast_device
 
 [Install]
 WantedBy=multi-user.target

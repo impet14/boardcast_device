@@ -1,26 +1,45 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# 1) Update & install system packages
-sudo apt update
-sudo DEBIAN_FRONTEND=noninteractive apt install -y \
-  python3-pip python3-venv python3-rpi.gpio i2c-tools
+# Configuration
+SERVICE_NAME="boardcast_device"
+SERVICE_FILE="boardcast_device.service"
+INSTALL_DIR="/home/rpi/boardcast_device"
 
-# 2) Enable I2C if not already on
-sudo raspi-config nonint do_i2c 0
+# Ensure script runs as root
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root" 
+   exit 1
+fi
 
-# 3) Create & activate virtualenv
-python3 -m venv venv
-source venv/bin/activate
+# 1) Verify installation directory exists
+if [[ ! -d "$INSTALL_DIR" ]]; then
+    echo "Error: Installation directory $INSTALL_DIR not found"
+    exit 1
+fi
 
-# 4) Install Python deps
-pip install --upgrade pip
-pip install -r requirements.txt
+# 2) Copy systemd service file
+echo "Installing systemd service..."
+cp "$SERVICE_FILE" /etc/systemd/system/
 
-# 5) Copy systemd unit & start service
-sudo cp boardcast_device.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable boardcast_device
-sudo systemctl start  boardcast_device
+# 3) Set permissions on .env file
+if [[ -f "$INSTALL_DIR/.env" ]]; then
+    echo "Securing configuration file..."
+    chown rpi:rpi "$INSTALL_DIR/.env"
+    chmod 600 "$INSTALL_DIR/.env"
+fi
 
-echo "✅ Installation complete. Check logs with: journalctl -u boardcast_device -f"
+# 4) Enable and start service
+echo "Starting service..."
+systemctl daemon-reload
+systemctl enable "$SERVICE_NAME"
+systemctl restart "$SERVICE_NAME"
+
+# 5) Verify installation
+sleep 2
+systemctl status "$SERVICE_NAME" --no-pager
+
+echo -e "\n✅ Service installed successfully!"
+echo "   Logs: journalctl -u $SERVICE_NAME -f"
+echo "   Config: $INSTALL_DIR/.env"
+echo "   Control: sudo systemctl [start|stop|restart] $SERVICE_NAME"
