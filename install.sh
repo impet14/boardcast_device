@@ -4,7 +4,7 @@ set -euo pipefail
 # Configuration
 SERVICE_NAME="boardcast_device"
 SERVICE_FILE="boardcast_device.service"
-INSTALL_DIR="/home/rpi/boardcast_device"
+INSTALL_DIR="/home/dev/boardcast_device"
 
 # Ensure script runs as root
 if [[ $EUID -ne 0 ]]; then
@@ -25,7 +25,7 @@ cp "$SERVICE_FILE" /etc/systemd/system/
 # 3) Set permissions on .env file
 if [[ -f "$INSTALL_DIR/.env" ]]; then
     echo "Securing configuration file..."
-    chown rpi:rpi "$INSTALL_DIR/.env"
+    chown dev:dev "$INSTALL_DIR/.env"
     chmod 600 "$INSTALL_DIR/.env"
 fi
 

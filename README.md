@@ -4,3 +4,11 @@ feature
  - boardcast mic from anywhere
  - self intelligence control
  - compatible with web,mobile applications
+
+
+
+ tasks
+ - remain - connecting real hw of db sensor
+  - need to dev hw
+
+

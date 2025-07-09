@@ -6,10 +6,10 @@ StartLimitBurst=5
 
 [Service]
 Type=simple
-User=rpi
-WorkingDirectory=/home/rpi/boardcast_device
-EnvironmentFile=/home/rpi/boardcast_device/.env
-ExecStart=/home/rpi/boardcast_device/venv/bin/python3 boardcast_device.py
+User=dev
+WorkingDirectory=/home/dev/boardcast_device
+EnvironmentFile=/home/dev/boardcast_device/.env
+ExecStart=/home/dev/boardcast_device/venv/bin/python3 boardcast_device.py
 Restart=on-failure
 RestartSec=10
 StandardOutput=syslog

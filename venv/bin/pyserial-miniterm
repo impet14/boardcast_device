@@ -1,4 +1,4 @@
-#!/home/rpi/env-bc/bin/python3
+#!/home/dev/boardcast_device/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

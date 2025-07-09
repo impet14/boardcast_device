@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 """
-boardcast_device.py with GPIO fan control
+Boardcast Device with Fan Control & Simulated Sound Monitoring
 
-- Reads BME280 via I2C (temp, humidity, pressure)
-- Controls GPIO23 (pin 16) fan based on temperature
-- Reads GPS NMEA from serial (/dev/ttyAMA0)
+- Reads BME280 (temp, humidity, pressure)
+- Controls fan based on temperature
+- Reads GPS data
+- Simulates sound level with realistic patterns
 - Publishes combined JSON payload to MQTT
 """
 
 import os, sys, time, json, logging
 from datetime import datetime, timezone
-
+import math
+import random
 import smbus2, bme280
 import serial, pynmea2
 import paho.mqtt.client as mqtt
@@ -38,11 +40,16 @@ GPS_PORT = os.getenv("GPS_PORT", "/dev/ttyAMA0")
 GPS_BAUD = int(os.getenv("GPS_BAUD", "9600"))
 PUBLISH_INTERVAL = int(os.getenv("PUBLISH_INTERVAL", "5"))
 
-# GPIO Configuration
+# GPIO Configuration (now mutable)
 FAN_GPIO = 23
-FAN_ON_TEMP = 35.0
-FAN_OFF_TEMP = 32.0  # Hysteresis to prevent rapid cycling
+FAN_ON_TEMP = float(os.getenv("FAN_ON_TEMP", "27.0"))
+FAN_OFF_TEMP = float(os.getenv("FAN_OFF_TEMP", "25.0"))  # Hysteresis to prevent rapid cycling
 FAN_STATE = False
+
+# Sound simulation parameters
+SOUND_BASE = 30.0     # Base noise level (dB)
+SOUND_VARIANCE = 25.0 # Max variation from base
+SOUND_SPIKES = True   # Enable random loud events
 
 # Validate critical settings
 if not BROKER_HOST or not DEVICE_ID:
@@ -60,30 +67,30 @@ logging.basicConfig(
 )
 logger = logging.getLogger()
 
-# ─── Initialize Hardware ────────────────────────────────────────────────────────
+# ─── Hardware Initialization ────────────────────────────────────────────────────
 def init_bme280():
-    """Initialize BME280 sensor with retry logic"""
-    for _ in range(3):
+    """Initialize BME280 sensor"""
+    for attempt in range(3):
         try:
             bus = smbus2.SMBus(I2C_BUS)
             params = bme280.load_calibration_params(bus, I2C_ADDR)
             logger.info(f"BME280 initialized at 0x{I2C_ADDR:02X}")
             return bus, params
         except Exception as e:
-            logger.error(f"BME280 init failed: {e}")
+            logger.error(f"BME280 init failed (attempt {attempt+1}): {e}")
             time.sleep(2)
     logger.critical("BME280 initialization failed after 3 attempts")
     return None, None
 
 def init_gps():
-    """Initialize GPS serial connection with retry logic"""
-    for _ in range(3):
+    """Initialize GPS serial connection"""
+    for attempt in range(3):
         try:
             ser = serial.Serial(GPS_PORT, GPS_BAUD, timeout=1)
             logger.info(f"GPS initialized on {GPS_PORT}")
             return ser
         except Exception as e:
-            logger.error(f"GPS init failed: {e}")
+            logger.error(f"GPS init failed (attempt {attempt+1}): {e}")
             time.sleep(2)
     logger.critical("GPS initialization failed after 3 attempts")
     return None
@@ -91,7 +98,8 @@ def init_gps():
 def init_gpio():
     """Initialize GPIO for fan control"""
     if not GPIO_AVAILABLE:
-        return
+        logger.warning("GPIO not available - fan control disabled")
+        return False
     
     try:
         GPIO.setmode(GPIO.BCM)
@@ -141,6 +149,30 @@ def read_gps(ser):
         logger.error(f"GPS read failed: {e}")
         return None
 
+def simulate_sound_level():
+    """Generate realistic sound level simulation"""
+    # Base noise level with slow variation
+    base = SOUND_BASE + math.sin(time.time() / 30) * 5
+    
+    # Add small random fluctuations
+    fluctuation = random.uniform(-2, 2)
+    
+    # Generate random loud events
+    spike = 0
+    duration = 1.0  # Default duration to avoid UnboundLocalError
+    
+    if SOUND_SPIKES and random.random() < 0.1:  # 10% chance of loud event
+        spike = random.uniform(15, SOUND_VARIANCE)
+        duration = random.uniform(0.5, 3.0)
+        
+    # Combine components with smooth decay
+    current_spike = spike * max(0, 1 - (time.time() % duration)/duration)
+    
+    # Calculate final sound level
+    sound_level = base + fluctuation + current_spike
+    
+    return round(max(SOUND_BASE - 5, sound_level), 1)  # Ensure minimum
+
 # ─── Fan Control ────────────────────────────────────────────────────────────────
 def control_fan(temperature):
     """Control fan based on temperature with hysteresis"""
@@ -163,9 +195,31 @@ def control_fan(temperature):
         logger.error(f"Fan control failed: {e}")
 
 # ─── MQTT Functions ─────────────────────────────────────────────────────────────
+
+def on_config_message(client, userdata, msg):
+    """Handle incoming config messages to update parameters."""
+    global FAN_ON_TEMP, FAN_OFF_TEMP
+    try:
+        config = json.loads(msg.payload.decode())
+        updated = []
+        if "FAN_ON_TEMP" in config:
+            FAN_ON_TEMP = float(config["FAN_ON_TEMP"])
+            updated.append(f"FAN_ON_TEMP={FAN_ON_TEMP}")
+        if "FAN_OFF_TEMP" in config:
+            FAN_OFF_TEMP = float(config["FAN_OFF_TEMP"])
+            updated.append(f"FAN_OFF_TEMP={FAN_OFF_TEMP}")
+        if updated:
+            logger.info(f"Config updated: {', '.join(updated)}")
+    except Exception as e:
+        logger.error(f"Config update failed: {e}")
+
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
         logger.info("MQTT connected")
+        # Subscribe to config topic
+        config_topic = f"{TOPIC_ROOT}/{DEVICE_ID}/config"
+        client.subscribe(config_topic, qos=1)
+        logger.info(f"Subscribed to config topic: {config_topic}")
     else:
         logger.error(f"MQTT connect failed ({rc})")
 
@@ -185,7 +239,7 @@ def connect_mqtt(client):
 # ─── Main Application ───────────────────────────────────────────────────────────
 def main():
     global FAN_STATE
-    
+
     # Initialize hardware
     i2c_bus, bme_params = init_bme280()
     gps_serial = init_gps()
@@ -195,32 +249,43 @@ def main():
     client = mqtt.Client(client_id=DEVICE_ID)
     client.on_connect = on_connect
     client.on_disconnect = on_disconnect
-    
+
+    # Subscribe to config topic for dynamic parameter updates
+    config_topic = f"{TOPIC_ROOT}/{DEVICE_ID}/config"
+    client.message_callback_add(config_topic, on_config_message)
+
     if not connect_mqtt(client):
         logger.critical("MQTT connection failed permanently")
         return
-    
+
     client.loop_start()
-    last_publish = 0
+    last_publish = time.monotonic()
+
+    # Sound simulation state
+    sound_spike = 0
+    spike_end = 0
     
     try:
         while True:
-            current_time = time.time()
+            current_time = time.monotonic()
+            elapsed = current_time - last_publish
             
-            # Read sensors
-            bme_data = read_bme(i2c_bus, bme_params) if i2c_bus and bme_params else None
-            gps_data = read_gps(gps_serial) if gps_serial else None
-            
-            # Control fan based on temperature
-            if bme_data:
-                control_fan(bme_data["temperature"])
-            
-            # Publish at intervals
-            if current_time - last_publish >= PUBLISH_INTERVAL:
+            # Read sensors only when needed
+            if elapsed >= PUBLISH_INTERVAL:
+                bme_data = read_bme(i2c_bus, bme_params) if i2c_bus and bme_params else None
+                gps_data = read_gps(gps_serial) if gps_serial else None
+                sound_level = simulate_sound_level()
+                
+                # Control fan based on temperature
+                if bme_data:
+                    control_fan(bme_data["temperature"])
+                
+                # Prepare payload
                 payload = {
                     "device_id": DEVICE_ID,
                     "timestamp": datetime.now(timezone.utc).isoformat(),
-                    "fan_state": FAN_STATE,
+                    "fan_state": "ON" if FAN_STATE else "OFF",
+                    "sound_db": sound_level
                 }
                 
                 if bme_data:
@@ -229,6 +294,7 @@ def main():
                 if gps_data:
                     payload["gps"] = gps_data
                 
+                # Publish data
                 try:
                     result = client.publish(TOPIC, json.dumps(payload), qos=1)
                     if result.rc == mqtt.MQTT_ERR_SUCCESS:
@@ -240,8 +306,8 @@ def main():
                 
                 last_publish = current_time
             
-            # Sleep with shorter intervals for better responsiveness
-            time.sleep(0.5)
+            # Efficient sleep
+            time.sleep(0.1)
             
     except KeyboardInterrupt:
         logger.info("Interrupted by user")
